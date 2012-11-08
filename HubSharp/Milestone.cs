@@ -84,7 +84,6 @@ namespace HubSharp.Core
 		{
 			// Set the url
 			String url = String.Format ("{0}/milestones/{1}", owner.Url, number);
-
 			return GetObject<Milestone> (owner, url);
 		}
 	}

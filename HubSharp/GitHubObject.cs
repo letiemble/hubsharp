@@ -147,7 +147,7 @@ namespace HubSharp.Core
 
 		#region ----- Operation Methods -----
 
-		internal static T CreateObject<T> (IRequesterProvider owner, String urlOrPath, T obj) where T: GitHubObject
+		internal static T CreateObject<T> (IRequesterProvider owner, String urlOrPath, GitHubObject obj) where T : GitHubObject
 		{
 			try {
 				String data = obj.ToJson ();

@@ -33,7 +33,6 @@ namespace HubSharp.Core
 		{
 			// Set the url
 			String url = String.Format ("{0}/labels", owner.Url);
-
 			return GetList<Label> (owner, url);
 		}
 		
@@ -41,7 +40,6 @@ namespace HubSharp.Core
 		{
 			// Set the url
 			String url = String.Format ("{0}/labels/{1}", owner.Url, name);
-
 			return GetObject<Label> (owner, url);
 		}
 	}

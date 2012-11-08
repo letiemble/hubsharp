@@ -59,6 +59,7 @@
     <Compile Include="NamedEntity.cs" />
     <Compile Include="NamedEntityType.cs" />
     <Compile Include="NamedEntityPlan.cs" />
+    <Compile Include="IssueComment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

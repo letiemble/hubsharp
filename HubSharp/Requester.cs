@@ -86,7 +86,9 @@ namespace HubSharp.Core
 			WebHeaderCollection headers = response.Headers;
 
 			this.UpdateLimits(headers);
-
+#if DEBUG
+			Console.WriteLine("Calls {0}/{1}", (this.CallLimit - this.CallRemaining), this.CallLimit);
+#endif
 			return Tuple.Create (code, headers, data);
 		}
 

@@ -95,6 +95,28 @@ namespace HubSharp.Core
 			}
 		}
 
+		#region ----- Issue Comments -----
+		
+		public IEnumerable<IssueComment> GetIssueComments ()
+		{
+			return IssueComment.List (this);
+		}
+		
+		public IssueComment GetIssueComment (int id)
+		{
+			return IssueComment.Get (this, id);
+		}
+		
+		public IssueComment CreateIssueComment (String body)
+		{
+			IssueComment.IssueCommentSurrogate obj = new IssueComment.IssueCommentSurrogate() {
+				Body = body,
+			};
+			return IssueComment.Create(this, obj);
+		}
+		
+		#endregion
+
 		internal static Issue Create (Repository owner, Issue.IssueSurrogate issue)
 		{
 			String url = String.Format ("{0}/issues", owner.Url);
@@ -157,7 +179,7 @@ namespace HubSharp.Core
 		/// This class is used to generate the required JSON for issue creation/modification.
 		/// </summary>
 		[JsonObject(MemberSerialization.OptIn)]
-		internal class IssueSurrogate : Issue
+		internal class IssueSurrogate : GitHubObject
 		{
 			/// <summary>
 			/// Initializes a new instance of the <see cref="HubSharp.Core.Issue+IssueSurrogate"/> class.
@@ -183,19 +205,38 @@ namespace HubSharp.Core
 			/// Gets or sets the assignee.
 			/// </summary>
 			[JsonProperty("assignee")]
-			public new String Assignee { get; set; }
+			public String Assignee { get; set; }
 			
+			/// <summary>
+			/// Gets or sets the body.
+			/// </summary>
+			[JsonProperty("body")]
+			public String Body { get; set; }
+
 			/// <summary>
 			/// Gets or sets the labels.
 			/// </summary>
 			[JsonProperty("labels")]
-			public new Object[] Labels { get; set; }
+			public String[] Labels { get; set; }
 
 			/// <summary>
 			/// Gets or sets the milestone.
 			/// </summary>
 			[JsonProperty("milestone")]
-			public new int? Milestone { get; set; }
+			public int? Milestone { get; set; }
+
+			/// <summary>
+			/// Gets or sets the state.
+			/// </summary>
+			[JsonProperty("state")]
+			[JsonConverter(typeof(StringEnumConverter))]
+			public ItemState? State { get; set; }
+
+			/// <summary>
+			/// Gets or sets the title.
+			/// </summary>
+			[JsonProperty("title")]
+			public String Title { get; set; }
 		}
 	}
 }
