@@ -13,7 +13,6 @@ namespace HubSharp.Core
 		public const String Post = "POST";
 		public const String Delete = "DELETE";
 		public const String Patch = "PATCH";
-
 		private String authorizationHeader;
 		private String baseUrl;
 		private int timeout;
@@ -41,6 +40,10 @@ namespace HubSharp.Core
 			this.prefix = uri.AbsoluteUri;
 		}
 
+		public int CallLimit { get; set; }
+
+		public int CallRemaining { get; set; }
+		
 		public Tuple<HttpStatusCode, WebHeaderCollection, String> Request (String verb, String url, IDictionary<String, String> parameters, String input)
 		{
 			Stream stream;
@@ -82,6 +85,8 @@ namespace HubSharp.Core
 			}
 			WebHeaderCollection headers = response.Headers;
 
+			this.UpdateLimits(headers);
+
 			return Tuple.Create (code, headers, data);
 		}
 
@@ -99,6 +104,18 @@ namespace HubSharp.Core
 				}
 			}
 			return result;
+		}
+
+		private void UpdateLimits (WebHeaderCollection headers)
+		{
+			String limiteValue = headers["X-RateLimit-Limit"];
+			if (!String.IsNullOrEmpty(limiteValue)) {
+				this.CallLimit = Int32.Parse(limiteValue);
+			}
+			String remainingValue = headers["X-RateLimit-Remaining"];
+			if (!String.IsNullOrEmpty(remainingValue)) {
+				this.CallRemaining = Int32.Parse(remainingValue);
+			}
 		}
 	}
 }
