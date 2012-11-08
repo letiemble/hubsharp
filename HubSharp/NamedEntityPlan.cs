@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace HubSharp.Core
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class UserPlan
+	public class NamedEntityPlan
 	{
 		/// <summary>
 		/// Gets or sets the collaborators.
@@ -13,7 +13,7 @@ namespace HubSharp.Core
 		/// The collaborators.
 		/// </value>
 		[JsonProperty("collaborators")]
-		public int Collaborators { get; set; }
+		public int? Collaborators { get; set; }
 
 		/// <summary>
 		/// Gets or sets the private repositories.
@@ -22,7 +22,7 @@ namespace HubSharp.Core
 		/// The private repositories.
 		/// </value>
 		[JsonProperty("private_repos")]
-		public int PrivateRepositories { get; set; }
+		public int? PrivateRepositories { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -40,6 +40,6 @@ namespace HubSharp.Core
 		/// The space.
 		/// </value>
 		[JsonProperty("space")]
-		public long Space { get; set; }
+		public long? Space { get; set; }
 	}
 }

@@ -2,13 +2,13 @@ using System.Runtime.Serialization;
 
 namespace HubSharp.Core
 {
-	public enum MilestoneState
+	public enum ItemState
 	{
 		[EnumMember(Value = "none")]
 		None = 0,
 		[EnumMember(Value = "open")]
 		Open,
-		[EnumMember(Value = "close")]
+		[EnumMember(Value = "closed")]
 		Closed,
 	}
 }

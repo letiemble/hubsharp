@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using Newtonsoft.Json;
 
 namespace HubSharp.Core
@@ -27,19 +26,19 @@ namespace HubSharp.Core
 		/// Gets or sets a value indicating whether this <see cref="HubSharp.Core.Repository"/> is fork.
 		/// </summary>
 		[JsonProperty("fork")]
-		public bool Fork { get; set; }
+		public bool? Fork { get; set; }
 
 		/// <summary>
 		/// Gets or sets the number of forks.
 		/// </summary>
 		[JsonProperty("forks")]
-		public int Forks { get; set; }
+		public int? Forks { get; set; }
 
 		/// <summary>
 		/// Gets or sets the fork count.
 		/// </summary>
 		[JsonProperty("forks_count")]
-		public int ForkCount { get; set; }
+		public int? ForkCount { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the full name.
@@ -93,7 +92,7 @@ namespace HubSharp.Core
 		/// Gets or sets the open issues.
 		/// </summary>
 		[JsonProperty("open_issues")]
-		public int OpenIssues { get; set; }
+		public int? OpenIssues { get; set; }
 
 		/// <summary>
 		/// Gets or sets the owner.
@@ -105,7 +104,7 @@ namespace HubSharp.Core
 		/// Gets or sets a value indicating whether this <see cref="HubSharp.Core.Repository"/> is private.
 		/// </summary>
 		[JsonProperty("private")]
-		public bool Private { get; set; }
+		public bool? Private { get; set; }
 
 		/// <summary>
 		/// Gets or sets the push date.
@@ -117,7 +116,7 @@ namespace HubSharp.Core
 		/// Gets or sets the size.
 		/// </summary>
 		[JsonProperty("size")]
-		public int Size { get; set; }
+		public int? Size { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the SSH URL.
@@ -135,14 +134,26 @@ namespace HubSharp.Core
 		/// Gets or sets the number of watchers.
 		/// </summary>
 		[JsonProperty("watchers")]
-		public int Watchers { get; set; }
+		public int? Watchers { get; set; }
 
 		/// <summary>
 		/// Gets or sets the watchers count.
 		/// </summary>
 		[JsonProperty("watchers_count")]
-		public int WatchersCount { get; set; }
-		
+		public int? WatchersCount { get; set; }
+
+		public override Requester Requester {
+			get {
+				return base.Requester;
+			}
+			set {
+				base.Requester = value;
+				if (this.Owner != null) {
+					this.Owner.Requester = value;
+				}
+			}
+		}
+
 		public IEnumerable<Label> GetLabels ()
 		{
 			return Label.List (this);
@@ -152,54 +163,104 @@ namespace HubSharp.Core
 		{
 			return Label.Get (this, name);
 		}
-		
-		public IEnumerable<Milestone> GetMilestones ()
+
+		#region ----- Labels -----
+
+		public Label CreateLabel (String name, String color = null)
 		{
-			return Milestone.List (this);
+			Label obj = new Label () {
+				Name = name,
+				Color = color
+			};
+			return Label.Create (this, obj);
 		}
+
+		public IEnumerable<Milestone> GetMilestones (ItemState state = ItemState.Open)
+		{
+			return Milestone.List (this, state);
+		}
+
+		#endregion
+		
+		#region ----- Milestones -----
 		
 		public Milestone GetMilestone (int id)
 		{
 			return Milestone.Get (this, id);
 		}
 		
-		internal static IEnumerable<Repository> List (User owner, RepositoryType type = RepositoryType.All)
+		public Milestone CreateMilestone (String title, ItemState? state = null, String description = null, DateTime? dueOn = null)
 		{
-			try {
-				String path;
-				switch (owner.Type) {
-				case UserType.User:
-					path = String.Format ("/users/{0}/repos", owner.Login);
-					break;
-				case UserType.Organization:
-					path = String.Format ("/orgs/{0}/repos", owner.Login);
-					break;
-				default:
-					throw new NotSupportedException ("Type: " + owner.Type);
-				}
-
-				// Set the parameters
-				IDictionary<String, String> parameters = new Dictionary<String, String> () {
-					{ "type", EnumExtensions.GetMemberValue(type) }
-				};
-				Tuple<WebHeaderCollection, String> result = owner.Requester.RequestAndCheck (WebRequestMethods.Http.Get, path, parameters, null);
-				IList<Repository> list = JsonConvert.DeserializeObject<List<Repository>> (result.Item2);
-
-				return list;
-			} catch (Exception) {
-				return null;
-			}
+			Milestone obj = new Milestone (){
+				Title = title,
+				State = state,
+				Description = description,
+				DueOn = dueOn,
+			};
+			return Milestone.Create (this, obj);
 		}
 
-		internal static Repository Get (User owner, String name)
+		#endregion
+		
+		#region ----- Issues -----
+
+		public IEnumerable<Issue> GetIssues (ItemState state = ItemState.Open)
 		{
-			try {
-				String path = String.Format ("/repos/{0}/{1}", owner.Login, name);
-				Tuple<WebHeaderCollection, String> result = owner.Requester.RequestAndCheck (WebRequestMethods.Http.Get, path, null, null);
-				return GitHubObject.Create<Repository> (result.Item2, owner.Requester);
-			} catch (Exception) {
-				return null;
-			}
+			return Issue.List (this, state);
 		}
+		
+		public Issue GetIssue (int id)
+		{
+			return Issue.Get (this, id);
+		}
+		
+		public Issue CreateIssue (String title, String body = null, String assignee = null, int? milestone = null, String[] labels = null)
+		{
+			Issue.IssueSurrogate obj = new Issue.IssueSurrogate() {
+				Title = title,
+				Body = body,
+				Assignee = assignee,
+				Milestone = milestone,
+				Labels = labels
+			};
+			return Issue.Create(this, obj);
+		}
+		
+		#endregion
+
+		#region ----- Repositories -----
+
+		internal static IEnumerable<Repository> List (NamedEntity owner, RepositoryType type = RepositoryType.Public)
+		{
+			// Set the path
+			String path;
+			switch (owner.Type) {
+			case NamedEntityType.User:
+				path = String.Format ("/users/{0}/repos", owner.Login);
+				break;
+			case NamedEntityType.Organization:
+				path = String.Format ("/orgs/{0}/repos", owner.Login);
+				break;
+			default:
+				throw new NotSupportedException ("Type: " + owner.Type);
+			}
+
+			// Set the parameters
+			IDictionary<String, String> parameters = new Dictionary<String, String> () {
+				{ "type", EnumExtensions.GetMemberValue(type) }
+			};
+
+			return GetList<Repository> (owner, path, parameters);
+		}
+
+		internal static Repository Get (NamedEntity owner, String name)
+		{
+			// Set the path
+			String path = String.Format ("/repos/{0}/{1}", owner.Login, name);
+
+			return GetObject<Repository> (owner, path);
+		}
+
+		#endregion
 	}
 }

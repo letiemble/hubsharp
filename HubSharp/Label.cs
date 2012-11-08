@@ -1,7 +1,6 @@
 using System;
-using Newtonsoft.Json;
-using System.Net;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace HubSharp.Core
 {
@@ -24,27 +23,26 @@ namespace HubSharp.Core
 		[JsonProperty("color")]
 		public String Color { get; set; }
 
+		internal static Label Create (Repository owner, Label label)
+		{
+			String url = String.Format ("{0}/labels", owner.Url);
+			return CreateObject<Label> (owner, url, label);
+		}
+
 		internal static IEnumerable<Label> List (Repository owner)
 		{
-			try {
-				String url = String.Format ("{0}/labels", owner.Url);
-				Tuple<WebHeaderCollection, String> result = owner.Requester.RequestAndCheck (WebRequestMethods.Http.Get, url, null, null);
-				IList<Label> list = JsonConvert.DeserializeObject<List<Label>> (result.Item2);
-				return list;
-			} catch (Exception) {
-				return null;
-			}
+			// Set the url
+			String url = String.Format ("{0}/labels", owner.Url);
+
+			return GetList<Label> (owner, url);
 		}
 		
 		internal static Label Get (Repository owner, String name)
 		{
-			try {
-				String url = String.Format ("{0}/labels/{1}", owner.Url, name);
-				Tuple<WebHeaderCollection, String> result = owner.Requester.RequestAndCheck (WebRequestMethods.Http.Get, url, null, null);
-				return GitHubObject.Create<Label> (result.Item2, owner.Requester);
-			} catch (Exception) {
-				return null;
-			}
+			// Set the url
+			String url = String.Format ("{0}/labels/{1}", owner.Url, name);
+
+			return GetObject<Label> (owner, url);
 		}
 	}
 }

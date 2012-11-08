@@ -9,6 +9,11 @@ namespace HubSharp.Core
 {
 	public class Requester
 	{
+		public const String Get = "GET";
+		public const String Post = "POST";
+		public const String Delete = "DELETE";
+		public const String Patch = "PATCH";
+
 		private String authorizationHeader;
 		private String baseUrl;
 		private int timeout;
@@ -36,21 +41,7 @@ namespace HubSharp.Core
 			this.prefix = uri.AbsoluteUri;
 		}
 
-		public Tuple<WebHeaderCollection, String> RequestAndCheck (String verb, String url, IDictionary<String, String> parameters, String input)
-		{
-			Tuple<HttpStatusCode, WebHeaderCollection, String> result = this.RequestRaw (verb, url, parameters, input);
-
-			HttpStatusCode code = result.Item1;
-			WebHeaderCollection headers = result.Item2;
-			String data = result.Item3;
-			if (code >= HttpStatusCode.BadRequest) {
-				throw new GitHubException ("Error:" + code + " " + data);
-			}
-
-			return Tuple.Create(headers, data);
-		}
-
-		public Tuple<HttpStatusCode, WebHeaderCollection, String> RequestRaw (String verb, String url, IDictionary<String, String> parameters, String input)
+		public Tuple<HttpStatusCode, WebHeaderCollection, String> Request (String verb, String url, IDictionary<String, String> parameters, String input)
 		{
 			Stream stream;
 			String data;
@@ -80,9 +71,9 @@ namespace HubSharp.Core
 			try {
 				response = (HttpWebResponse)request.GetResponse ();
 			} catch (HttpException hex) {
-				return Tuple.Create ((HttpStatusCode)hex.ErrorCode, (WebHeaderCollection) null, "{ exception : '" + hex.Message + "' }");
+				return Tuple.Create ((HttpStatusCode)hex.ErrorCode, (WebHeaderCollection)null, "{ exception : '" + hex.Message + "' }");
 			} catch (Exception ex) {
-				return Tuple.Create (HttpStatusCode.BadRequest, (WebHeaderCollection) null, "{ exception : '" + ex.Message + "' }");
+				return Tuple.Create (HttpStatusCode.BadRequest, (WebHeaderCollection)null, "{ exception : '" + ex.Message + "' }");
 			}
 
 			HttpStatusCode code = response.StatusCode;
@@ -91,7 +82,7 @@ namespace HubSharp.Core
 			}
 			WebHeaderCollection headers = response.Headers;
 
-			return Tuple.Create(code, headers, data);
+			return Tuple.Create (code, headers, data);
 		}
 
 		private String CompleteUrl (String url, IDictionary<String, String> parameters)

@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 
 namespace HubSharp.Core
 {
-	public enum UserType
+	public enum NamedEntityType
 	{
 		/// <summary>
 		/// No type.

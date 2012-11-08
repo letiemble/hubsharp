@@ -36,6 +36,7 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Web" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -44,23 +45,24 @@
     <Compile Include="GitHubObject.cs" />
     <Compile Include="Label.cs" />
     <Compile Include="Milestone.cs" />
-    <Compile Include="MilestoneState.cs" />
     <Compile Include="Organization.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="RepositoryType.cs" />
     <Compile Include="RequestDirection.cs" />
     <Compile Include="Requester.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="UserPlan.cs" />
-    <Compile Include="UserType.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="IRequesterProvider.cs" />
+    <Compile Include="Issue.cs" />
+    <Compile Include="ItemState.cs" />
+    <Compile Include="PullRequest.cs" />
+    <Compile Include="NamedEntity.cs" />
+    <Compile Include="NamedEntityType.cs" />
+    <Compile Include="NamedEntityPlan.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="Extensions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HubSharp.csproj" />
   </ItemGroup>
 </Project>
