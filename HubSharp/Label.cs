@@ -7,6 +7,9 @@ namespace HubSharp.Core
 	[JsonObject(MemberSerialization.OptIn)]
 	public class Label : GitHubObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HubSharp.Core.Label"/> class.
+		/// </summary>
 		public Label ()
 		{
 		}

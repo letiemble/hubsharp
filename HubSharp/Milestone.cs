@@ -8,6 +8,9 @@ namespace HubSharp.Core
 	[JsonObject(MemberSerialization.OptIn)]
 	public class Milestone : GitHubObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HubSharp.Core.Milestone"/> class.
+		/// </summary>
 		public Milestone ()
 		{
 		}

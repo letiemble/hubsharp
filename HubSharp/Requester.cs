@@ -16,9 +16,6 @@ namespace HubSharp.Core
 		private String authorizationHeader;
 		private String baseUrl;
 		private int timeout;
-		private String hostname;
-		private int port;
-		private String prefix;
 
 		public Requester (String loginOrToken, String password, String baseUrl, int timeout)
 		{
@@ -33,11 +30,6 @@ namespace HubSharp.Core
 
 			this.baseUrl = baseUrl;
 			this.timeout = timeout;
-
-			Uri uri = new Uri (this.baseUrl);
-			this.hostname = uri.Host;
-			this.port = uri.Port;
-			this.prefix = uri.AbsoluteUri;
 		}
 
 		public int CallLimit { get; set; }
@@ -72,6 +64,9 @@ namespace HubSharp.Core
 
 			HttpWebResponse response = null;
 			try {
+				Console.WriteLine("Request [{0}] {1}", request.Method, request.RequestUri);
+#if DEBUG
+#endif
 				response = (HttpWebResponse)request.GetResponse ();
 			} catch (HttpException hex) {
 				return Tuple.Create ((HttpStatusCode)hex.ErrorCode, (WebHeaderCollection)null, "{ exception : '" + hex.Message + "' }");

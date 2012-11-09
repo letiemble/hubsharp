@@ -6,6 +6,9 @@ namespace HubSharp.Core
 {
 	public class Repository : GitHubObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HubSharp.Core.Repository"/> class.
+		/// </summary>
 		public Repository ()
 		{
 		}
@@ -23,7 +26,7 @@ namespace HubSharp.Core
 		public String Description { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="HubSharp.Core.Repository"/> is fork.
+		/// Gets or sets a value indicating whether this <see cref="HubSharp.Core.Repository"/> is a fork.
 		/// </summary>
 		[JsonProperty("fork")]
 		public bool? Fork { get; set; }

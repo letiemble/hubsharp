@@ -8,6 +8,9 @@ namespace HubSharp.Core
 	[JsonObject(MemberSerialization.OptIn)]
 	public class NamedEntity : GitHubObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HubSharp.Core.NamedEntity"/> class.
+		/// </summary>
 		public NamedEntity ()
 		{
 		}

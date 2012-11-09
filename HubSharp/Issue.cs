@@ -9,6 +9,9 @@ namespace HubSharp.Core
 	[JsonObject(MemberSerialization.OptIn)]
 	public class Issue : GitHubObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HubSharp.Core.Issue"/> class.
+		/// </summary>
 		public Issue ()
 		{
 		}
@@ -123,20 +126,6 @@ namespace HubSharp.Core
 			return CreateObject<Issue> (owner, url, issue);
 		}
 
-		internal static IEnumerable<Issue> List (User owner, ItemState state = ItemState.Open)
-		{
-			// Set the path
-			String path = String.Format ("/users/{0}/issues", owner.Login);
-			return List (owner, path, state);
-		}
-		
-		internal static IEnumerable<Issue> List (Organization owner, ItemState state = ItemState.Open)
-		{
-			// Set the path
-			String path = String.Format ("/orgs/{0}/issues", owner.Login);
-			return List (owner, path, state);
-		}
-		
 		internal static IEnumerable<Issue> List (Repository owner, ItemState state = ItemState.Open)
 		{
 			// Set the url
@@ -144,20 +133,6 @@ namespace HubSharp.Core
 			return List (owner, url, state);
 		}
 
-		internal static Issue Get (User owner, int id)
-		{
-			// Set the path
-			String path = String.Format ("/users/{0}/issues/{1}", owner.Login, id);
-			return GetObject<Issue> (owner, path);
-		}
-		
-		internal static Issue Get (Organization owner, int id)
-		{
-			// Set the path
-			String path = String.Format ("/orgs/{0}/issues/{1}", owner.Login, id);
-			return GetObject<Issue> (owner, path);
-		}
-		
 		internal static Issue Get (Repository owner, int id)
 		{
 			// Set the url
@@ -171,7 +146,6 @@ namespace HubSharp.Core
 			IDictionary<String, String> parameters = new Dictionary<String, String> () {
 				{ "state", EnumExtensions.GetMemberValue(state) }
 			};
-			
 			return GetList<Issue> (owner, urlOrPath, parameters);
 		}
 		

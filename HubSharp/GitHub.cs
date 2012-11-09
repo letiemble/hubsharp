@@ -15,7 +15,7 @@ namespace HubSharp.Core
 			this.Requester = new Requester (loginOrToken, password, baseUrl, timeout);
 		}
 
-		public Requester Requester { get; private set; }
+		public Requester Requester { get; set; }
 		
 		/// <summary>
 		/// Gets the user.

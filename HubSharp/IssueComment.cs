@@ -7,6 +7,9 @@ namespace HubSharp.Core
 	[JsonObject(MemberSerialization.OptIn)]
 	public class IssueComment : GitHubObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HubSharp.Core.IssueComment"/> class.
+		/// </summary>
 		public IssueComment ()
 		{
 		}
